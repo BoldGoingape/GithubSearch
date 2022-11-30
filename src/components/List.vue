@@ -1,11 +1,18 @@
 <template>
   <div class="rwow">
-    <div class="card" v-for="user in users" :key="user.login">
+    <!-- 展示用户咧表 -->
+    <div class="card" v-for="user in info.users" :key="user.login">
       <a :href="user.html_url" target="_blank">
         <img :src="user.avatar_url" alt="" />
         <p class="card-text">{{ user.login }}</p>
       </a>
     </div>
+    <!-- 展示欢迎词 -->
+    <h1 v-show="info.isFirst">欢迎</h1>
+    <!-- 展示加载中 -->
+    <h1 v-show="info.isLoading">加载中。。。</h1>
+    <!-- 错误信息 -->
+    <h1 v-show="info.errMsg">{{ info.errMsg }}</h1>
   </div>
 </template>
 
@@ -14,13 +21,18 @@ export default {
   name: "List-",
   data() {
     return {
-      users: [],
+      info: {
+        isFirst: true,
+        isLoading: false,
+        errMsg: "",
+        users: [],
+      },
     };
   },
   mounted() {
     this.$bus.$on("getUser", (user) => {
       console.log(user);
-      this.users = user;
+      this.info = user;
     });
   },
 };

@@ -21,13 +21,28 @@ export default {
   },
   methods: {
     searchUsers() {
+      this.$bus.$emit("getUser", {
+        isFirst: false,
+        isLoading: true,
+        errMsg: "",
+        users: [],
+      });
       axios
-        .get(`https://api.github.com/search/users?q=${this.keyWord}`)
+        .get(`https://api.git11hub.com/search/users?q=${this.keyWord}`)
         .then((result) => {
-          this.$bus.$emit("getUser", result.data.items);
+          this.$bus.$emit("getUser", {
+            isLoading: false,
+            errMsg: "",
+            users: result.data.items,
+          });
         })
         .catch((err) => {
           console.log(err.message);
+          this.$bus.$emit("getUser", {
+            isLoading: false,
+            errMsg: err.message,
+            users: [],
+          });
         });
     },
   },
